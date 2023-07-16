@@ -2,23 +2,40 @@ import streamlit as st
 from PIL import Image, ImageFilter
 import os
 
-# create a floder image
-if not os.path.exists('image'):
-    os.makedirs('image')
+# create a folder images
+if not os.path.exists('images'):
+    os.makedirs('images')
 
 def save_image(image):
-         img = Image.open(image)
-         img.save(f'image/{image.name}.png')
+    img = Image.open(image)
+    img.save(f'images/{image.name}.png')
 
-st.title('🖼️Image Processing App')
+st.title('🖼️ Image Processing App')
 
 upload = st.file_uploader(
-       label='upload Your image',
-       type=['png','lpg','jpeg']
+    label='Upload your image',
+    type=['png', 'jpg', 'jpeg']
 )
 if upload is not None:
-       save_image(upload)
-       st.image(
-              upload,
-              caption='Uploaded Image',
-              use_column_width=True)
+    save_image(upload)
+    img = Image.open(upload)
+    col1, col2 = st.columns(2)
+
+    filters = ['contour','emboss','edge_enhance','blur','smooth','sharpen']
+    option = st.sidebar.selectbox( 'Select a filter',filters)
+    col1.image(upload,  caption='Uploaded Image', use_column_width=True)
+    if option == 'contour':
+        col2.image(img.filter(ImageFilter.CONTOUR),  caption='Contour Filter',  use_column_width=True)
+    if option == 'emboss':
+        col2.image(img.filter(ImageFilter.EMBOSS),  caption='Emboss Filter',  use_column_width=True)
+    if option =='edge_enhance':
+        col2.image(img.filter(ImageFilter.EDGE_ENHANCE), caption='Edge_enhance', use_column_width=True)
+    if option =='blur':
+        col2.image(img.filter(ImageFilter.BLUR), caption='Blur', use_column_width=True)
+    if option =='smooth':
+        col2.image(img.filter(ImageFilter.SMOOTH), caption='Smooth', use_column_width=True)
+    if option =='sharpen':
+        col2.image(img.filter(ImageFilter.SHARPEN), caption='Sharpen', use_column_width=True)
+
+
+
